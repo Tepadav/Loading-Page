@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=2, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="">
+    <title></title>
+    <style>
+      * {
+          box-sizing: border-box;
+      }
+      body {
+          background-color: #333;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          font-family: Arial, Helvetica, sans-serif;
+          min-height: 20vh;
+          margin: 0;
+      }
+      canvas {
+          border-radius: 5px;
+          background: transparent;
+          margin: auto;
+      }
+    </style>
+    <script>
+      window.onload = graphic_1;
+
+      function graphic_1(){
+          const canvas = document.getElementById('graphic_1');
+          const ctx = canvas.getContext('2d');
+          class circle {
+              constructor(x, y) {
+                  this.x = x;
+                  this.y = y;
+                  this.size = 5;
+                  this.color = 'gray';
+                  this.dx = Math.random();
+                  this.dy = Math.random();
+                  this.rightSideWall = x + 52 ;
+                  this.leftSideWall = x - 62 ;
+                  this.top = y - 41;
+                  this.bottom = y + 30;
+              }
+
+              drawCircle() {
+                  ctx.fillStyle = this.color;
+                  ctx.beginPath();
+                  ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2, false);
+                  ctx.fill();
+              }
+
+              options() {
+                  this.drawCircle();
+                  this.x += this.dx ;
+                  this.y += this.dy ;
+                  // Detect side walls
+                  if (this.x + this.size > this.rightSideWall || this.x - this.size < this.leftSideWall) this.dx *= -1;
+                  // Detect top and bottom
+                  if (this.y + this.size > this.bottom || this.y - this.size < this.top) this.dy *= -1;
+              }
+          }
+          
+          let circle1 = new circle(400, 275), 
+              circle2 = new circle(100, 250),
+              circle3 = new circle(100, 450),
+              circle4 = new circle(200, 375),
+              circle5 = new circle(500, 300),
+              circle6 = new circle(450, 450),
+              circles = [circle1, circle2, circle3, circle4, circle5, circle6]
+          
+          function  drawLines(circle1, circle2) {
+              ctx.strokeStyle = '#d1cfcb';
+              ctx.lineWidth = '5';
+              ctx.beginPath();
+              ctx.moveTo(circle1.x, circle1.y);
+              ctx.lineTo(circle2.x, circle2.y);
+              ctx.stroke();
+          }
+          function animate() {
+              ctx.clearRect(0, 0, canvas.width, canvas.height)
+              drawLines(circle1, circle6)
+              drawLines(circle5, circle1)
+              drawLines(circle4, circle6)
+              drawLines(circle2, circle4)
+              drawLines(circle2, circle6)
+              drawLines(circle1, circle3)
+              drawLines(circle4, circle3)
+              drawLines(circle5, circle3)
+              drawLines(circle6, circle3)
+              for (let circle of circles) {
+                  circle.options();
+              }
+            requestAnimationFrame(animate)
+          }
+        animate();
+      }
+    </script>
+    <!-- This code runs, When a user open your page/application on an old IE browser-->
+    <!--[if lt IE 9]> script(src="js/html5shiv.min.js") <![endif]-->
+  </head>
+  <body data-spy="scroll" data-target=".scrollspy">
+    <canvas id="graphic_1" width="600" height="600"></canvas>
+  </body>
+</html>
